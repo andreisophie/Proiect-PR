@@ -1,0 +1,6 @@
+de-17-93-ee Lion    1
+5a-68-9b-81 Man     1
+a8-a4-ea-12 Fish    1
+ae-5c-88-ee Thief   0
+1d-1e-04-15 Fired   0
+dd-af-fd-14 CEO     1

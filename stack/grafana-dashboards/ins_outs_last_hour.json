@@ -1,0 +1,283 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- Grafana --"
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 1,
+    "links": [],
+    "panels": [
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "cea6o6xkr4lc0f"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "fillOpacity": 80,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineWidth": 1,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 13,
+          "w": 22,
+          "x": 0,
+          "y": 0
+        },
+        "id": 1,
+        "options": {
+          "barRadius": 0,
+          "barWidth": 0.97,
+          "fullHighlight": false,
+          "groupWidth": 0.7,
+          "legend": {
+            "calcs": [],
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "orientation": "auto",
+          "showValue": "auto",
+          "stacking": "none",
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          },
+          "xTickLabelRotation": 0,
+          "xTickLabelSpacing": 0
+        },
+        "pluginVersion": "11.4.0",
+        "targets": [
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "cea6o6xkr4lc0f"
+            },
+            "groupBy": [
+              {
+                "params": [
+                  "5m"
+                ],
+                "type": "time"
+              },
+              {
+                "params": [
+                  "inout::tag"
+                ],
+                "type": "tag"
+              }
+            ],
+            "measurement": "/_*.*/",
+            "orderByTime": "ASC",
+            "policy": "default",
+            "refId": "A",
+            "resultFormat": "time_series",
+            "select": [
+              [
+                {
+                  "params": [
+                    "name"
+                  ],
+                  "type": "field"
+                },
+                {
+                  "params": [],
+                  "type": "count"
+                }
+              ]
+            ],
+            "tags": []
+          }
+        ],
+        "title": "Aggregated Ins and Outs",
+        "type": "barchart"
+      },
+      {
+        "datasource": {
+          "type": "influxdb",
+          "uid": "cea6o6xkr4lc0f"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "align": "auto",
+              "cellOptions": {
+                "type": "auto"
+              },
+              "inspect": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 15,
+          "w": 22,
+          "x": 0,
+          "y": 13
+        },
+        "id": 2,
+        "options": {
+          "cellHeight": "sm",
+          "footer": {
+            "countRows": false,
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
+          "frameIndex": 0,
+          "showHeader": true
+        },
+        "pluginVersion": "11.4.0",
+        "targets": [
+          {
+            "datasource": {
+              "type": "influxdb",
+              "uid": "cea6o6xkr4lc0f"
+            },
+            "groupBy": [
+              {
+                "params": [
+                  "5m"
+                ],
+                "type": "time"
+              },
+              {
+                "params": [
+                  "inout::tag"
+                ],
+                "type": "tag"
+              }
+            ],
+            "hide": false,
+            "measurement": "andrei.scan1",
+            "orderByTime": "DESC",
+            "policy": "default",
+            "query": "SELECT \n  time AS \"timestamp\", \n  SUM(CASE WHEN \"inout\" = 'in' THEN 1 ELSE 0 END) AS \"in\", \n  SUM(CASE WHEN \"inout\" = 'out' THEN 1 ELSE 0 END) AS \"out\", \n  SUM(CASE WHEN \"inout\" = 'denied' THEN 1 ELSE 0 END) AS \"denied\"\nFROM \"andrei.scan1\"\nWHERE $timeFilter\nGROUP BY time(5m)\nORDER BY time DESC\n",
+            "rawQuery": false,
+            "refId": "A",
+            "resultFormat": "time_series",
+            "select": [
+              [
+                {
+                  "params": [
+                    "name"
+                  ],
+                  "type": "field"
+                },
+                {
+                  "params": [],
+                  "type": "count"
+                }
+              ]
+            ],
+            "tags": []
+          }
+        ],
+        "title": "Aggregated Ins and Outs",
+        "transformations": [
+          {
+            "id": "joinByField",
+            "options": {
+              "byField": "Time",
+              "mode": "outer"
+            }
+          },
+          {
+            "id": "renameByRegex",
+            "options": {
+              "regex": ".*.*.*{ inout: (.*) }",
+              "renamePattern": "$1"
+            }
+          }
+        ],
+        "type": "table"
+      }
+    ],
+    "preload": false,
+    "refresh": "1m",
+    "schemaVersion": 40,
+    "tags": [],
+    "templating": {
+      "list": []
+    },
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "browser",
+    "title": "Ins and Out: Last Hour",
+    "uid": "aea6pgkuwecqoa",
+    "version": 12,
+    "weekStart": ""
+}

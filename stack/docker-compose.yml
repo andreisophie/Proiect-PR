@@ -1,0 +1,65 @@
+services:
+  mqtt_broker:
+    image: eclipse-mosquitto
+    hostname: mqtt_broker
+    ports:
+      - 8883:8883
+    networks:
+      - mqtt_adapter_network
+    volumes:
+      - mosquitto-data:/etc/mosquitto
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./certs:/mosquitto/config/certs
+  
+  influxdb:
+    image: influxdb:1.8
+    hostname: influxdb
+    networks:
+      - adapter_db_network
+      - grafana_db_network
+    volumes:
+      - influxdb-data:/var/lib/influxdb
+      - influxdb-config:/etc/influxdb
+
+  grafana:
+    image: grafana/grafana
+    hostname: grafana
+    ports:
+      - 80:3000
+    networks:
+      - grafana_db_network
+    environment:
+      - GF_SECURITY_ADMIN_USER=asistent
+      - GF_SECURITY_ADMIN_PASSWORD=grafanaSCD2024
+    volumes:
+      - 'grafana_storage:/var/lib/grafana'
+
+  adapter:
+    build: .
+    hostname: adapter
+    depends_on:
+      - mqtt_broker
+      - influxdb
+    networks:
+      - mqtt_adapter_network
+      - adapter_db_network
+    environment:
+      - DEBUG_DATA_FLOW=true
+    command: ["python3", "-u", "adapter.py"]
+    volumes:
+      - ./adapter-data:/app/data
+    develop:
+      watch:
+        - action: rebuild
+          path: adapter.py
+
+networks:
+  mqtt_adapter_network:
+  adapter_db_network:
+  grafana_db_network:
+
+volumes:
+  mosquitto-data:
+  influxdb-data:
+  influxdb-config:
+  grafana_storage: {}
